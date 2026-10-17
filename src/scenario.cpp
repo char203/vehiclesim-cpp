@@ -14,6 +14,11 @@ namespace {
 
 using Json = nlohmann::json;
 
+/// Location of the document root in error paths. A named object (rather than
+/// a "" literal) avoids binding temporaries in calls that return references
+/// into the document, which GCC's -Wdangling-reference would flag.
+const std::string kRootPath;
+
 /// Readable name of a JSON value's type for error messages.
 std::string typeName(const Json& value) {
     if (value.is_number()) {
@@ -102,7 +107,7 @@ void validateSection(const std::string& path, Validator&& validator) {
 
 VehicleParams parseVehicle(const Json& root) {
     const std::string path = "vehicle";
-    const Json& object = requireObject(requireMember(root, "", "vehicle"), path);
+    const Json& object = requireObject(requireMember(root, kRootPath, "vehicle"), path);
     rejectUnknownKeys(object, path, {"wheelbase", "max_steering_angle", "max_acceleration", "max_braking", "max_speed"});
 
     VehicleParams params;
@@ -117,7 +122,7 @@ VehicleParams parseVehicle(const Json& root) {
 
 VehicleState parseInitialState(const Json& root, const VehicleParams& params) {
     const std::string path = "initial_state";
-    const Json& object = requireObject(requireMember(root, "", "initial_state"), path);
+    const Json& object = requireObject(requireMember(root, kRootPath, "initial_state"), path);
     rejectUnknownKeys(object, path, {"x", "y", "heading", "speed"});
 
     VehicleState state;
@@ -131,7 +136,7 @@ VehicleState parseInitialState(const Json& root, const VehicleParams& params) {
 
 SimulationConfig parseSimulation(const Json& root) {
     const std::string path = "simulation";
-    const Json& object = requireObject(requireMember(root, "", "simulation"), path);
+    const Json& object = requireObject(requireMember(root, kRootPath, "simulation"), path);
     rejectUnknownKeys(object, path, {"duration", "time_step", "integrator"});
 
     SimulationConfig config;
@@ -165,7 +170,7 @@ SteeringCommand parseSteering(const Json& segment, const std::string& path) {
 }
 
 ControlSchedule parseControls(const Json& root, const SimulationConfig& config) {
-    const Json& array = requireMember(root, "", "controls");
+    const Json& array = requireMember(root, kRootPath, "controls");
     if (!array.is_array()) {
         fail("controls", "expected an array, got " + typeName(array));
     }
@@ -207,7 +212,7 @@ Scenario parseScenario(std::string_view jsonText) {
     } catch (const Json::parse_error& error) {
         throw ScenarioError(std::string("malformed JSON: ") + error.what());
     }
-    requireObject(root, "");
+    requireObject(root, kRootPath);
     rejectUnknownKeys(root, "", {"name", "description", "vehicle", "initial_state", "simulation", "controls"});
 
     Scenario scenario;

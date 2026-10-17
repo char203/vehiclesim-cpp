@@ -189,6 +189,41 @@ fields are filled in by the following milestone's commit.
   UBSan).
 - **Results:** 26/26 CTest entries passed in both configurations
   (7 unit suites, 4 scenario runs, 4 CSV validations, 11 CLI tests).
+- **Commit:** `87e5315`
+- **Push:** pushed to `origin/feature/testing`; merged to `main` via PR #5 (merge commit `1b9be8f`). No CI existed yet, so local tests were the merge gate.
+- **Outstanding:** ASan could not be run locally (see above).
+
+---
+
+## Milestone 9 — Docker
+
+- **Branch:** `feature/docker`
+- **Summary:** Multi-stage `Dockerfile` (`build` → `test` → `runtime`) on
+  `ubuntu:24.04` pinned by multi-arch index digest; GCC 13, Ninja, Release,
+  `-Werror`; non-root runtime user; `.dockerignore`; README Docker section.
+- **Environment notes:** Docker Desktop was stopped and was started for this
+  milestone. The Docker CLI hung in `docker-credential-desktop get` (macOS
+  keychain helper), so images were pulled anonymously using a session-local
+  `DOCKER_CONFIG` in the scratch directory; the user's Docker configuration
+  was not modified.
+- **Bug found and fixed:** GCC 13 `-Wdangling-reference` (fatal under
+  `-Werror`, not reported by Apple clang) at four `scenario.cpp` call sites
+  that passed a temporary `""` path into functions returning references into
+  the JSON document. A false positive, but fixed by using a named
+  `kRootPath` instead of suppressing the warning.
+- **Tests executed:** `docker build --target test`, `docker run --rm
+  vehiclesim-test`; ASan+UBSan Debug build and `ctest` inside the container;
+  `docker build -t vehiclesim .`; `--version`, a scenario run, and a run
+  writing CSV to a bind-mounted host directory, then validated with
+  `validate_csv.py`.
+- **Results:** container (GCC 13.3, linux/arm64) 26/26 passed; ASan+UBSan
+  26/26 passed (closes the macOS ASan gap from milestone 8); runtime image
+  101 MB; mounted-volume CSV valid. Cross-platform comparison against the
+  macOS (clang) CSVs: `acceleration` and `constant_turn` byte-identical;
+  `lane_change` differs in 402/1001 rows by at most 1e-16 (last printed digit
+  of near-zero headings), consistent with libm `sin` / FMA-contraction
+  differences. Determinism is therefore bitwise per platform/toolchain, and
+  to ~1e-16 across platforms.
 - **Commit:** _pending_
 - **Push:** _pending_
-- **Outstanding:** ASan could not be run locally (see above).
+- **Outstanding:** none.
