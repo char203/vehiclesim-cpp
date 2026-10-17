@@ -1,0 +1,9 @@
+# Keep the build context small and free of local artifacts.
+.git
+.github
+.venv
+build
+build-*
+output
+docs
+*.md
