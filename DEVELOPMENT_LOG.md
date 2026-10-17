@@ -278,6 +278,28 @@ fields are filled in by the following milestone's commit.
   at dt = 0.25 s: 1.44 m vs 6.6e-6 m) were taken from executed runs.
 - **Tests executed:** `ctest --test-dir build --output-on-failure`.
 - **Results:** 26/26 passed.
-- **Commit:** _pending (recorded in a follow-up commit)_
-- **Push:** _pending_
+- **Commit:** `56b9834`
+- **Push:** pushed directly to `origin/main` (documentation only; verified with `git ls-remote`).
 - **Outstanding:** see the final summary below.
+
+---
+
+## Final summary
+
+- **Repository:** https://github.com/char203/vehiclesim-cpp
+- **Milestones completed:** 1–11. Pull requests #1–#7 were merged with merge
+  commits, so the individual commits are preserved; no force-pushes and no
+  history rewrites.
+- **Final local test results:** 26/26 CTest entries (91 unit cases) on macOS
+  / Apple Clang 17 (Release, `-Werror`; Debug + UBSan), and 26/26 on Linux /
+  GCC 13.3 in Docker (Release; Debug + ASan + UBSan).
+- **CI:** all 10 checks passed on PR #7. Later runs on `main` are listed on
+  the repository's Actions page.
+- **Known limitations of the development environment:**
+  - ASan hangs during its own runtime start-up on the macOS 26 development
+    machine, so it was run only in Linux (Docker and CI).
+  - Docker Desktop's credential helper hung; images were pulled anonymously
+    with a session-local `DOCKER_CONFIG` and the user's configuration was
+    left unchanged.
+  - Cross-platform output agrees to ~1e-16 rather than bit for bit (see
+    `docs/mathematics.md` §6).
