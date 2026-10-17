@@ -25,7 +25,8 @@ include(cmake/CompilerWarnings.cmake)
 # --- Core library -------------------------------------------------------------
 # All simulation logic lives in a library so the CLI and the tests share it.
 add_library(vehiclesim_core STATIC
-  src/vehicle.cpp)
+  src/vehicle.cpp
+  src/simulator.cpp)
 target_include_directories(vehiclesim_core PUBLIC ${PROJECT_SOURCE_DIR}/include)
 vehiclesim_set_warnings(vehiclesim_core)
 vehiclesim_enable_sanitizers(vehiclesim_core)
