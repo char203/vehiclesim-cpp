@@ -55,6 +55,26 @@ fields are filled in by the following milestone's commit.
 - **Tests executed:** `cmake --build build` (with `-Werror`),
   `ctest --test-dir build --output-on-failure`.
 - **Results:** `test_vehicle` 10/10, `test_bicycle_model` 13/13 passed.
+- **Commit:** `ece9555`
+- **Push:** pushed to `origin/feature/vehicle-model`; merged to `main` via PR #1 (merge commit `fccc479`). No CI existed yet, so local tests were the merge gate.
+- **Outstanding:** none.
+
+---
+
+## Milestone 4 — Numerical integration
+
+- **Branch:** `feature/integration`
+- **Summary:** Added `include/simulator.hpp` / `src/simulator.cpp`:
+  Forward Euler and RK4 steppers behind `integrateStep` (zero-order-hold
+  control, clamped command, projected result), `SimulationConfig` validation,
+  an index-based time grid that ends exactly at `duration` (shortened final
+  step when needed), and the `Simulator` run loop.
+- **Tests executed:** `cmake --build build` (`-Werror`),
+  `ctest --test-dir build --output-on-failure`.
+- **Results:** 4/4 suites passed — `test_vehicle` 10/10,
+  `test_bicycle_model` 13/13, `test_integration` 10/10, `test_simulator`
+  18/18. Measured convergence orders against the analytical circle:
+  Euler 1.000, 1.000, 1.000; RK4 4.001, 4.000, 4.000.
 - **Commit:** _pending_
 - **Push:** _pending_
 - **Outstanding:** none.

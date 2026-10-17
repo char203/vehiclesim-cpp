@@ -9,3 +9,5 @@ endfunction()
 
 vehiclesim_add_test_suite(test_vehicle)
 vehiclesim_add_test_suite(test_bicycle_model)
+vehiclesim_add_test_suite(test_integration)
+vehiclesim_add_test_suite(test_simulator)
