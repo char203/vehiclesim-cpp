@@ -227,3 +227,57 @@ fields are filled in by the following milestone's commit.
 - **Commit:** `b4988a2`
 - **Push:** pushed to `origin/feature/docker`; merged to `main` via PR #6 (merge commit `402d706`). No CI existed yet, so local and container tests were the merge gate.
 - **Outstanding:** none.
+
+---
+
+## Milestone 10 — GitHub Actions
+
+- **Branch:** `feature/ci`
+- **Summary:** `.github/workflows/ci.yml`, triggered on every push and pull
+  request. Matrix `{ubuntu-latest, macos-latest} × {Debug, Release}` with
+  `-Werror` (ASan+UBSan on ubuntu/Debug only): configure, build, `ctest`,
+  `scripts/run_all.sh` (scenarios → CSV validation → plots), check for the
+  expected CSV/PNG files, upload artifacts. Docker job: build the test image,
+  run the suite in the container, build the runtime image, validate a
+  bind-mounted CSV. Caches: pip (setup-python), FetchContent directory
+  (actions/cache), Docker layers (GHA cache). CI badge added to the README.
+  (This entry was written after the merge so it can record the CI results.)
+- **Tests executed:** local YAML parse (Ruby `YAML.load_file`); local dry run
+  of the exact CI configure command (26/26); then the workflow itself on
+  PR #7.
+- **Results:** PR #7 — all 10 checks passed (5 jobs × push + pull_request
+  events; runs 39013801228 and 39013801470). Every job reported 26/26 CTest
+  entries passed and 3/3 CSVs valid. The configure lines in the logs confirm
+  `VEHICLESIM_ENABLE_SANITIZERS=ON` on ubuntu/Debug only. The push to `main`
+  after merging also succeeded.
+- **Commit:** `3ce37f8`
+- **Push:** pushed to `origin/feature/ci`; merged to `main` via PR #7 (merge
+  commit `0cd979b`) after all required checks passed.
+- **Outstanding:** none.
+
+---
+
+## Milestone 11 — Documentation
+
+- **Branch:** `main` (documentation only)
+- **Summary:** Completed `README.md` (overview, Mermaid architecture diagram,
+  model, installation, build, usage, CSV format, scenarios, sample plots,
+  testing, Docker, CI, design decisions, limitations, future work);
+  `docs/mathematics.md`, `docs/architecture.md`, `docs/validation.md`
+  (requirement → test traceability, tolerance justification, mutation
+  checks, bugs found, what is not validated); four verified plots in
+  `docs/images/`, copied from the `scripts/run_all.sh` output that was
+  inspected in milestone 7.
+- **Documentation review against behavior:** re-ran the README usage
+  commands, the error examples (now real output from `tests/data/`) and the
+  overlay command. Corrected three unverified claims: the minimum compiler
+  versions (replaced by the versions actually tested), the CMake minimum
+  (now marked as declared, with the tested versions), and the Python minimum
+  for plots (matplotlib 3.11.2 requires Python ≥ 3.11, not 3.9). All
+  figures in the docs (errors, orders, offsets, stop time, Euler/RK4 errors
+  at dt = 0.25 s: 1.44 m vs 6.6e-6 m) were taken from executed runs.
+- **Tests executed:** `ctest --test-dir build --output-on-failure`.
+- **Results:** 26/26 passed.
+- **Commit:** _pending (recorded in a follow-up commit)_
+- **Push:** _pending_
+- **Outstanding:** see the final summary below.
