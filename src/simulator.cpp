@@ -146,13 +146,14 @@ std::vector<TelemetrySample> Simulator::run(const VehicleState& initial, const C
     samples.reserve(times.size());
 
     VehicleState state = initial;
-    for (std::size_t k = 0; k < times.size(); ++k) {
+    for (std::size_t k = 0; k + 1 < times.size(); ++k) {
         const ControlInput command = model_.clampInput(controls(times[k]));
         samples.push_back(TelemetrySample{times[k], state, command});
-        if (k + 1 < times.size()) {
-            state = integrateStep(model_, state, command, times[k + 1] - times[k], config_.method);
-        }
+        state = integrateStep(model_, state, command, times[k + 1] - times[k], config_.method);
     }
+    // No step follows the final sample; it reports the command held over the
+    // last step so the telemetry shows what actually acted on the vehicle.
+    samples.push_back(TelemetrySample{times.back(), state, samples.back().control});
     return samples;
 }
 
