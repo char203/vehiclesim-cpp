@@ -1,0 +1,2 @@
+# Plotting dependency for scripts/visualize.py (validate_csv.py needs only the stdlib).
+matplotlib==3.11.2

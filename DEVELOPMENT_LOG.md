@@ -121,6 +121,37 @@ fields are filled in by the following milestone's commit.
 - **Results:** 12/12 CTest entries passed (6 unit suites incl.
   `test_telemetry` 10/10; 3 scenario runs; 3 CSV validations). The validator
   rejected all three tampered files with exit code 1.
+- **Commit:** `62b6542`
+- **Push:** pushed to `origin/feature/scenarios`; merged to `main` via PR #3 (merge commit `e407021`). No CI existed yet, so local tests were the merge gate.
+- **Outstanding:** none.
+
+---
+
+## Milestone 7 — Visualization
+
+- **Branch:** `feature/visualization`
+- **Summary:** Added `scripts/visualize.py` (matplotlib, Agg backend; per CSV:
+  trajectory with equal axis scaling, speed, heading in degrees, lateral
+  position, and a 4-panel overview; `--overlay` with repeatable `--label`
+  for method comparisons), `scripts/requirements.txt` (matplotlib 3.11.2),
+  and `scripts/run_all.sh`, the single command that builds, runs all
+  scenarios, validates every CSV and generates all plots plus an Euler-vs-RK4
+  comparison. Colors come from a categorical palette checked with a
+  colorblind-safety validator (all checks pass; aqua below 3:1 contrast, so
+  overlays always carry a legend and distinct line styles).
+- **Bugs found and fixed while verifying:** `--labels` (nargs="+") swallowed
+  the CSV positionals → replaced by repeatable `--label`. After inspecting the
+  PNGs: speed axes now start at 0 (a constant speed was auto-zoomed to look
+  variable); added the lateral-position panel because the 3.5 m lane change is
+  hard to see at equal scale over 150 m; the comparison now uses the constant
+  turn at dt = 0.25 s, since at dt = 0.1 s on the lane change Euler and RK4
+  were visually identical.
+- **Tests executed:** `scripts/run_all.sh` from a clean `output/`; visual
+  inspection of the overview PNGs.
+- **Results:** 3/3 CSVs validated; 20 PNGs written (16 scenario + 4
+  comparison). Plots match the expected physics (closed 13.3 m circle,
+  3.5 m S-curve with heading returning to 0, speed capped at 20 m/s and
+  stopping at ≈14.3 s).
 - **Commit:** _pending_
 - **Push:** _pending_
 - **Outstanding:** none.
