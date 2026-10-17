@@ -21,7 +21,40 @@ fields are filled in by the following milestone's commit.
   `./build/vehiclesim --version`.
 - **Results:** Configure and build succeeded with zero warnings; binary
   printed `vehiclesim 0.1.0`. No unit tests exist yet.
-- **Commit:** _pending_
-- **Push:** _pending_
+- **Commit:** `6ff7518`
+- **Push:** pushed to `origin/main` (verified with `git ls-remote`); repository created with `gh repo create`.
 - **Outstanding:** Docker daemon not running on the dev machine; matplotlib not
   installed globally (will use a project-local virtualenv).
+
+---
+
+## Milestone 2 — Vehicle state and parameters
+
+- **Branch:** `feature/vehicle-model`
+- **Summary:** Added `VehicleState`, `ControlInput`, `VehicleParams`
+  (`include/vehicle.hpp`), `validateParams` / `validateState` with
+  field-named error messages, the `vehiclesim_core` static library, a
+  minimal assertion-based test harness (`tests/test_framework.hpp`, explicit
+  test lists, no static registration) and the `test_vehicle` CTest suite.
+- **Tests executed:** `cmake -S . -B build -DVEHICLESIM_WARNINGS_AS_ERRORS=ON`,
+  `cmake --build build`, `ctest --test-dir build --output-on-failure`.
+- **Results:** 10/10 `test_vehicle` cases passed; build clean under `-Werror`.
+- **Commit:** `52c0b9d`
+- **Push:** pushed to `origin/feature/vehicle-model` (verified with `git ls-remote`).
+- **Outstanding:** none.
+
+---
+
+## Milestone 3 — Kinematic bicycle model
+
+- **Branch:** `feature/vehicle-model`
+- **Summary:** Added `BicycleModel` (rear-axle kinematic bicycle) with a
+  three-stage constraint pipeline: actuator clamping (`clampInput`), speed
+  saturation inside the right-hand side (`derivative`), and post-step
+  projection (`enforceConstraints`). Added `turningRadius` (R = L/tan δ).
+- **Tests executed:** `cmake --build build` (with `-Werror`),
+  `ctest --test-dir build --output-on-failure`.
+- **Results:** `test_vehicle` 10/10, `test_bicycle_model` 13/13 passed.
+- **Commit:** _pending_
+- **Push:** _pending_
+- **Outstanding:** none.

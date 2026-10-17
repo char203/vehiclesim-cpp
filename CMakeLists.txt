@@ -22,8 +22,17 @@ option(VEHICLESIM_ENABLE_SANITIZERS "Build with AddressSanitizer and UndefinedBe
 
 include(cmake/CompilerWarnings.cmake)
 
+# --- Core library -------------------------------------------------------------
+# All simulation logic lives in a library so the CLI and the tests share it.
+add_library(vehiclesim_core STATIC
+  src/vehicle.cpp)
+target_include_directories(vehiclesim_core PUBLIC ${PROJECT_SOURCE_DIR}/include)
+vehiclesim_set_warnings(vehiclesim_core)
+vehiclesim_enable_sanitizers(vehiclesim_core)
+
 # --- Command-line simulator --------------------------------------------------
 add_executable(vehiclesim src/main.cpp)
+target_link_libraries(vehiclesim PRIVATE vehiclesim_core)
 target_compile_definitions(vehiclesim PRIVATE VEHICLESIM_VERSION="${PROJECT_VERSION}")
 vehiclesim_set_warnings(vehiclesim)
 vehiclesim_enable_sanitizers(vehiclesim)
@@ -31,4 +40,5 @@ vehiclesim_enable_sanitizers(vehiclesim)
 # --- Tests -------------------------------------------------------------------
 if(VEHICLESIM_BUILD_TESTS)
   enable_testing()
+  add_subdirectory(tests)
 endif()
