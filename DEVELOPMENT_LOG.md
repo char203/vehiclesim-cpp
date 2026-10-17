@@ -224,6 +224,6 @@ fields are filled in by the following milestone's commit.
   of near-zero headings), consistent with libm `sin` / FMA-contraction
   differences. Determinism is therefore bitwise per platform/toolchain, and
   to ~1e-16 across platforms.
-- **Commit:** _pending_
-- **Push:** _pending_
+- **Commit:** `b4988a2`
+- **Push:** pushed to `origin/feature/docker`; merged to `main` via PR #6 (merge commit `402d706`). No CI existed yet, so local and container tests were the merge gate.
 - **Outstanding:** none.

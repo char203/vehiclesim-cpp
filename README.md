@@ -1,5 +1,7 @@
 # VehicleSim
 
+[![CI](https://github.com/char203/vehiclesim-cpp/actions/workflows/ci.yml/badge.svg)](https://github.com/char203/vehiclesim-cpp/actions/workflows/ci.yml)
+
 A lightweight vehicle kinematics simulator written in C++17. It integrates a
 kinematic bicycle model with selectable numerical integrators (Forward Euler
 and RK4), runs JSON-defined driving scenarios, and exports telemetry to CSV.
