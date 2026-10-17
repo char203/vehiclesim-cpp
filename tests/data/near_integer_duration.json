@@ -1,0 +1,8 @@
+{
+  "name": "near_integer_duration",
+  "description": "duration / time_step = 100.0000001: within the relative tolerance, so exactly 100 steps.",
+  "vehicle": { "wheelbase": 2.7, "max_steering_angle": 0.6, "max_acceleration": 3.0, "max_braking": 6.0, "max_speed": 30.0 },
+  "initial_state": { "x": 0.0, "y": 0.0, "heading": 0.0, "speed": 5.0 },
+  "simulation": { "duration": 100.0000001, "time_step": 1.0, "integrator": "euler" },
+  "controls": []
+}

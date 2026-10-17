@@ -1,0 +1,16 @@
+{
+  "name": "constant_turn",
+  "description": "Constant 10 m/s with a fixed 0.2 rad left steer: a circle of radius L/tan(0.2) = 13.32 m, completing one lap in 8.37 s.",
+  "vehicle": {
+    "wheelbase": -2.7,
+    "max_steering_angle": 0.6,
+    "max_acceleration": 3.0,
+    "max_braking": 6.0,
+    "max_speed": 30.0
+  },
+  "initial_state": { "x": 0.0, "y": 0.0, "heading": 0.0, "speed": 10.0 },
+  "simulation": { "duration": 10.0, "time_step": 0.01, "integrator": "rk4" },
+  "controls": [
+    { "start": 0.0, "end": 10.0, "acceleration": 0.0, "steering": 0.2 }
+  ]
+}

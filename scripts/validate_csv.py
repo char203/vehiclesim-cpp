@@ -73,6 +73,16 @@ def check_initial_state(rows: list[dict[str, float]], scenario: dict) -> None:
             raise ValidationError(f"initial {key} is {first[key]}, expected {expected}")
 
 
+def expected_step_count(duration: float, time_step: float) -> int:
+    """Mirror of stepCount() in src/simulator.cpp: duration / dt is treated
+    as an integer when within a *relative* 1e-9, otherwise rounded up."""
+    ratio = duration / time_step
+    nearest = round(ratio)
+    if abs(ratio - nearest) <= 1e-9 * max(1.0, ratio):
+        return int(nearest)
+    return math.ceil(ratio)
+
+
 def check_timestamps(rows: list[dict[str, float]], scenario: dict) -> None:
     duration = scenario["simulation"]["duration"]
     time_step = scenario["simulation"]["time_step"]
@@ -84,7 +94,9 @@ def check_timestamps(rows: list[dict[str, float]], scenario: dict) -> None:
             raise ValidationError(f"row {index}: time does not increase ({times[index - 1]} -> {times[index]})")
         is_last = index == len(times) - 1
         if is_last:
-            if step > time_step + TIME_TOLERANCE:
+            # The simulator absorbs a residual of up to 1e-9 * duration into
+            # the final step instead of emitting a vanishingly short extra step.
+            if step > time_step + TIME_TOLERANCE + 1e-9 * duration:
                 raise ValidationError(f"final step {step} exceeds time_step {time_step}")
         elif abs(step - time_step) > TIME_TOLERANCE:
             raise ValidationError(f"row {index}: step {step} != time_step {time_step}")
@@ -92,7 +104,7 @@ def check_timestamps(rows: list[dict[str, float]], scenario: dict) -> None:
     if abs(times[-1] - duration) > TIME_TOLERANCE:
         raise ValidationError(f"final timestamp {times[-1]} != duration {duration}")
 
-    expected_rows = math.ceil(duration / time_step - 1e-9) + 1
+    expected_rows = expected_step_count(duration, time_step) + 1
     if len(rows) != expected_rows:
         raise ValidationError(f"{len(rows)} data rows, expected {expected_rows}")
 

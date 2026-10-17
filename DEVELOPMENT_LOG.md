@@ -152,6 +152,43 @@ fields are filled in by the following milestone's commit.
   comparison). Plots match the expected physics (closed 13.3 m circle,
   3.5 m S-curve with heading returning to 0, speed capped at 20 m/s and
   stopping at ≈14.3 s).
+- **Commit:** `6e1009f`
+- **Push:** pushed to `origin/feature/visualization`; merged to `main` via PR #4 (merge commit `055b210`). No CI existed yet, so local tests were the merge gate.
+- **Outstanding:** none.
+
+---
+
+## Milestone 8 — Automated testing
+
+- **Branch:** `feature/testing`
+- **Summary:** Added `test_analytical` (11 cases): closed-form circle checked
+  at every sample, clockwise circle, piecewise-analytical acceleration
+  scenario, small-angle lane-change solution, quantified first-order
+  convergence of time-varying commands under zero-order hold, and edge cases
+  (standstill, top speed, shortened final step, boundary rounding at
+  `3 * 0.3 < 0.9`, unwrapped heading, minimum radius). Added 11 CLI tests
+  via `cmake/ExpectExit.cmake` that check exit codes and error text, with
+  invalid inputs in `tests/data/`.
+- **Bugs found and fixed:**
+  1. `validate_csv.py` computed the expected row count with an absolute
+     tolerance while the simulator uses a relative one; for
+     `duration / dt = 1000.0000001` it expected 1001 rows instead of 1000.
+     Now mirrors `stepCount()`.
+  2. The new regression scenario (`tests/data/near_integer_duration.json`)
+     then showed the validator also rejected the final step, which the
+     simulator deliberately lengthens by the absorbed residual (here 1e-7 s).
+     The final-step tolerance now scales with the duration.
+- **Mutation checks (temporary, reverted):** boundary tolerance set to 0 →
+  2 tests failed; speed saturation and projection disabled → 9 tests failed.
+- **Sanitizers:** ASan hangs inside its own runtime start-up on this machine
+  (`InitializeShadowMemory` → `dyld_shared_cache_iterate`, before `main`),
+  an Apple clang/macOS runtime issue rather than a project defect. Ran UBSan
+  alone (`-fsanitize=undefined -fno-sanitize-recover`), Debug: 26/26 passed.
+  ASan + UBSan are scheduled to run in CI on Linux.
+- **Tests executed:** `ctest` (Release, `-Werror`) and `ctest` (Debug +
+  UBSan).
+- **Results:** 26/26 CTest entries passed in both configurations
+  (7 unit suites, 4 scenario runs, 4 CSV validations, 11 CLI tests).
 - **Commit:** _pending_
 - **Push:** _pending_
-- **Outstanding:** none.
+- **Outstanding:** ASan could not be run locally (see above).
