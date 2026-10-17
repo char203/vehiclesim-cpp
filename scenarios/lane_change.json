@@ -1,0 +1,19 @@
+{
+  "name": "lane_change",
+  "description": "Left lane change at a constant 15 m/s: one full period of sine steering (amplitude 0.0165 rad, 4 s) shifts the vehicle ~3.5 m laterally and returns the heading to zero.",
+  "vehicle": {
+    "wheelbase": 2.7,
+    "max_steering_angle": 0.6,
+    "max_acceleration": 3.0,
+    "max_braking": 6.0,
+    "max_speed": 30.0
+  },
+  "initial_state": { "x": 0.0, "y": 0.0, "heading": 0.0, "speed": 15.0 },
+  "simulation": { "duration": 10.0, "time_step": 0.01, "integrator": "rk4" },
+  "controls": [
+    { "start": 0.0, "end": 2.0, "acceleration": 0.0, "steering": 0.0 },
+    { "start": 2.0, "end": 6.0, "acceleration": 0.0,
+      "steering": { "profile": "sine", "amplitude": 0.0165, "period": 4.0 } },
+    { "start": 6.0, "end": 10.0, "acceleration": 0.0, "steering": 0.0 }
+  ]
+}

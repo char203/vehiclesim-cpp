@@ -1,0 +1,18 @@
+{
+  "name": "acceleration",
+  "description": "Straight-line launch from rest to the 20 m/s speed limit, a 1 s coast, then full braking to a stop.",
+  "vehicle": {
+    "wheelbase": 2.7,
+    "max_steering_angle": 0.6,
+    "max_acceleration": 3.0,
+    "max_braking": 6.0,
+    "max_speed": 20.0
+  },
+  "initial_state": { "x": 0.0, "y": 0.0, "heading": 0.0, "speed": 0.0 },
+  "simulation": { "duration": 15.0, "time_step": 0.01, "integrator": "rk4" },
+  "controls": [
+    { "start": 0.0, "end": 10.0, "acceleration": 2.5, "steering": 0.0 },
+    { "start": 10.0, "end": 11.0, "acceleration": 0.0, "steering": 0.0 },
+    { "start": 11.0, "end": 15.0, "acceleration": -6.0, "steering": 0.0 }
+  ]
+}

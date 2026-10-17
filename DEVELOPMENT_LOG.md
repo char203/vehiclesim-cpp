@@ -75,6 +75,30 @@ fields are filled in by the following milestone's commit.
   `test_bicycle_model` 13/13, `test_integration` 10/10, `test_simulator`
   18/18. Measured convergence orders against the analytical circle:
   Euler 1.000, 1.000, 1.000; RK4 4.001, 4.000, 4.000.
+- **Commit:** `5023061`
+- **Push:** pushed to `origin/feature/integration`; merged to `main` via PR #2 (merge commit `a09bc5e`). No CI existed yet, so local tests were the merge gate.
+- **Outstanding:** none.
+
+---
+
+## Milestone 5 — Scenario execution
+
+- **Branch:** `feature/scenarios`
+- **Summary:** Added `ControlSchedule` (sorted, non-overlapping `[start, end)`
+  segments; constant or sine steering; coast outside segments; 1 ns boundary
+  tolerance), JSON scenario loading (`scenario.hpp/.cpp`) with strict schema
+  checks (required fields, types, unknown-key rejection) and located error
+  messages, limit warnings, and a CLI (`--integrator`, `--dt`, `-q`; exit
+  codes 0/1/2). Dependency: nlohmann/json 3.12.0 via `find_package` or a
+  SHA256-pinned `FetchContent` download, linked PRIVATE. Added the three
+  scenarios.
+- **Tests executed:** clean rebuild with `-Werror`; `ctest`; each scenario via
+  the CLI; manual CLI error cases (malformed JSON, negative wheelbase, key
+  typo, missing file, steering above limit, bad `--integrator`).
+- **Results:** 5/5 suites passed (`test_scenario` 19/19). Scenario end states
+  agree with closed-form values: acceleration x = 173.3334 m (analytic
+  173.333 m); constant turn heading 7.5078 rad (analytic 7.5077 rad);
+  lane change lateral offset 3.4966 m (design target ≈ 3.5 m).
 - **Commit:** _pending_
 - **Push:** _pending_
 - **Outstanding:** none.
