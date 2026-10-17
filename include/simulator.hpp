@@ -54,9 +54,9 @@ void validateConfig(const SimulationConfig& config);
 /// the final step is shortened so the run still ends exactly at `duration`.
 [[nodiscard]] std::vector<double> buildTimeGrid(const SimulationConfig& config);
 
-/// One telemetry row: the state at `time` and the clamped command that is
-/// applied over the following step. The last row repeats the command sampled
-/// at the final time so every row is complete.
+/// One telemetry row: the state at `time` and the clamped command applied
+/// over the following step. The final row has no following step and repeats
+/// the command held over the last step.
 struct TelemetrySample {
     double time = 0.0;
     VehicleState state;

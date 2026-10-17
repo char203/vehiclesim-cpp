@@ -51,7 +51,8 @@ add_library(vehiclesim_core STATIC
   src/vehicle.cpp
   src/simulator.cpp
   src/control_schedule.cpp
-  src/scenario.cpp)
+  src/scenario.cpp
+  src/telemetry.cpp)
 target_include_directories(vehiclesim_core PUBLIC ${PROJECT_SOURCE_DIR}/include)
 # PRIVATE: the JSON library is an implementation detail of scenario.cpp.
 target_link_libraries(vehiclesim_core PRIVATE nlohmann_json::nlohmann_json)

@@ -4,6 +4,7 @@
 
 #include "scenario.hpp"
 #include "simulator.hpp"
+#include "telemetry.hpp"
 
 #include <cstdlib>
 #include <exception>
@@ -25,6 +26,7 @@ constexpr double kRadToDeg = 57.295779513082320876;
 
 struct CliOptions {
     std::string scenarioPath;
+    std::string outputPath;
     std::optional<vehiclesim::IntegrationMethod> integrator;
     std::optional<double> timeStep;
     bool quiet = false;
@@ -43,6 +45,7 @@ void printUsage(std::ostream& out) {
            "Runs a kinematic bicycle-model scenario and prints a summary.\n"
            "\n"
            "options:\n"
+           "  -o, --output <file.csv>   write telemetry (time,x,y,heading,speed,steering,acceleration)\n"
            "  --integrator <euler|rk4>  override the scenario's integration method\n"
            "  --dt <seconds>            override the scenario's time step\n"
            "  -q, --quiet               suppress the summary\n"
@@ -81,6 +84,8 @@ CliOptions parseArguments(const std::vector<std::string>& args) {
             options.version = true;
         } else if (arg == "-q" || arg == "--quiet") {
             options.quiet = true;
+        } else if (arg == "-o" || arg == "--output") {
+            options.outputPath = nextValue();
         } else if (arg == "--integrator") {
             try {
                 options.integrator = vehiclesim::parseIntegrationMethod(nextValue());
@@ -140,8 +145,14 @@ int run(const CliOptions& options) {
     }
 
     const std::vector<vehiclesim::TelemetrySample> samples = vehiclesim::runScenario(scenario);
+    if (!options.outputPath.empty()) {
+        vehiclesim::writeCsvFile(options.outputPath, samples);
+    }
     if (!options.quiet) {
         printSummary(scenario, samples);
+        if (!options.outputPath.empty()) {
+            std::cout << "telemetry   : " << options.outputPath << '\n';
+        }
     }
     return kExitSuccess;
 }
