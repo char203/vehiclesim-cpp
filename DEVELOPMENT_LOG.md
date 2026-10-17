@@ -39,6 +39,22 @@ fields are filled in by the following milestone's commit.
 - **Tests executed:** `cmake -S . -B build -DVEHICLESIM_WARNINGS_AS_ERRORS=ON`,
   `cmake --build build`, `ctest --test-dir build --output-on-failure`.
 - **Results:** 10/10 `test_vehicle` cases passed; build clean under `-Werror`.
+- **Commit:** `52c0b9d`
+- **Push:** pushed to `origin/feature/vehicle-model` (verified with `git ls-remote`).
+- **Outstanding:** none.
+
+---
+
+## Milestone 3 — Kinematic bicycle model
+
+- **Branch:** `feature/vehicle-model`
+- **Summary:** Added `BicycleModel` (rear-axle kinematic bicycle) with a
+  three-stage constraint pipeline: actuator clamping (`clampInput`), speed
+  saturation inside the right-hand side (`derivative`), and post-step
+  projection (`enforceConstraints`). Added `turningRadius` (R = L/tan δ).
+- **Tests executed:** `cmake --build build` (with `-Werror`),
+  `ctest --test-dir build --output-on-failure`.
+- **Results:** `test_vehicle` 10/10, `test_bicycle_model` 13/13 passed.
 - **Commit:** _pending_
 - **Push:** _pending_
 - **Outstanding:** none.

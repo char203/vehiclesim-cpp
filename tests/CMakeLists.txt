@@ -8,3 +8,4 @@ function(vehiclesim_add_test_suite name)
 endfunction()
 
 vehiclesim_add_test_suite(test_vehicle)
+vehiclesim_add_test_suite(test_bicycle_model)
